@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>TimeSea</title>
+    <link rel="stylesheet" href="assets/css/maind134.css?v=3.4" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <script src="assets/js/magiczoom/magiczoom.js"></script>
+    <style>
+      .cart-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .cart-details,
+      .cart-totals {
+        padding: 15px;
+      }
+      .cart-details {
+        flex: 1 1 70%;
+      }
+      .cart-totals {
+        flex: 1 1 30%;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+      }
+      .product-item {
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+      }
+      .quantity-controls {
+        display: flex;
+        align-items: center;
+      }
+      .quantity-controls button {
+        border: none;
+        background: none;
+        font-size: 1rem;
+        padding: 0 10px;
+      }
+      .quantity-controls span {
+        margin: 0 10px;
+        width: 40px;
+        text-align: center;
+        display: inline-block;
+      }
+      @media (max-width: 768px) {
+        .cart-details,
+        .cart-totals {
+          flex: 1 1 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('userHeader') %>
+    <main class="main">
+      <section class="mt-50 mb-50">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <div class="cart-container">
+                <div class="cart-details">
+                  <% if (user && user.cart) { %> <% if (message) { %>
+                  <h4 class="text-danger text-center"><%= message %></h4>
+                  <br />
+                  <% } %> <% if (user.cart.length) { %> <%
+                  user.cart.forEach((item, i) => { %>
+                  <div class="product-item mb-3">
+                    <div class="row align-items-center">
+                      <div class="col-md-2">
+                        <img
+                          src="<%= item.productId.image[0] %>"
+                          alt="#"
+                          class="img-fluid"
+                        />
+                      </div>
+                      <div class="col-md-4">
+                        <a href="/productDetails?id=<%= item.productId._id %>"
+                          ><h5 class="product-name">
+                            <%= item.productId.title %>
+                          </h5></a
+                        >
+                        <p class="product-info">
+                          <%= item.productId.brandId.brandName %>
+                        </p>
+                      </div>
+                      <div class="col-md-2">
+                        <p class="product-price fw-bold text-danger">
+                          ₹<%=item.productId.salePrice.toFixed(2) %>
+                        </p>
+                        <p class="product-discount text-success">
+                          <%= Math.max(item.productId.discountPercentage,
+                          item.productId.catDiscountPercentage) %>% OFF
+                        </p>
+                        <p class="product-price text-decoration-line-through">
+                          ₹<%= item.productId.regularPrice.toFixed(2) %>
+                        </p>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="quantity-controls">
+                          <button
+                            class="btn btn-sm btn-outline-secondary"
+                            onclick="updateQuantity('<%= i %>', 'decrease', '<%= item.productId.quantity %>')"
+                          >
+                            -
+                          </button>
+                          <span id="quantity<%= i %>"
+                            ><%= item.quantity %></span
+                          >
+                          <button
+                            class="btn btn-sm btn-outline-secondary"
+                            onclick="updateQuantity('<%= i %>', 'increase', '<%= item.productId.quantity %>')"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <button
+                          class="btn btn-danger btn-sm"
+                          onclick="removeFromCart('<%= item.productId._id %>')"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row align-items-center">
+                      <div class="col-md-12 text-right">
+                        <p>
+                          Subtotal: ₹<span id="subtotal<%= i %>"
+                            ><%= (item.productId.salePrice *
+                            item.quantity).toFixed(2) %></span
+                          >
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <input
+                    type="hidden"
+                    value="<%= item.productId.salePrice %>"
+                    id="salePrice<%= i %>"
+                  />
+                  <input
+                    type="hidden"
+                    value="<%= item.productId.regularPrice %>"
+                    id="regularPrice<%= i %>"
+                  />
+                  <% }); %> <% } else { %>
+                  <h4 class="text-center text-danger">Cart is empty</h4>
+                  <% } %> <% } %>
+                </div>
+
+                <% if (user.cart.length > 0) { %>
+                <div class="cart-totals">
+                  <div class="heading_s1 mb-3">
+                    <h4>Cart Totals</h4>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <td class="cart_total_label">Original Total</td>
+                          <td class="cart_total_amount">
+                            <strong
+                              ><span
+                                class="font-xl fw-900 text-brand"
+                                id="originalTotal"
+                              ></span
+                            ></strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="cart_total_label">Total Discount</td>
+                          <td class="cart_total_amount">
+                            <strong
+                              ><span
+                                class="font-xl fw-900 text-brand"
+                                id="totalDiscount"
+                              ></span
+                            ></strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="cart_total_label">
+                            Total Percentage Discount
+                          </td>
+                          <td class="cart_total_amount">
+                            <strong
+                              ><span
+                                class="font-xl fw-900 text-brand"
+                                id="totalPercentageDiscount"
+                              ></span
+                            ></strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="cart_total_label">Taxable Amount</td>
+                          <td class="cart_total_amount">
+                            <strong
+                              ><span
+                                class="font-xl fw-900 text-brand"
+                                id="taxableAmount"
+                              ></span
+                            ></strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="cart_total_label">GST (18%)</td>
+                          <td class="cart_total_amount">
+                            <strong
+                              ><span
+                                class="font-xl fw-900 text-brand"
+                                id="taxAmount"
+                              ></span
+                            ></strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="cart_total_label">Total</td>
+                          <td class="cart_total_amount">
+                            <strong
+                              ><span
+                                class="font-xl fw-900 text-brand"
+                                id="totalAmount"
+                              ></span
+                            ></strong>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <a
+                    href="/checkOut"
+                    class="button button-add-to-cart"
+                    style="
+                      background-color: #fb641b;
+                      color: white;
+                      border: none;
+                      padding: 10px 20px;
+                      font-size: 16px;
+                      cursor: pointer;
+                    "
+                    onmouseover="this.style.backgroundColor='#d9534f';"
+                    onmouseout="this.style.backgroundColor='#fb641b';"
+                  >
+                    <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a
+                  >
+                </div>
+
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      async function updateQuantity(index, action, maxLimit) {
+        const quantityElement = document.getElementById(`quantity${index}`);
+        const subtotalElement = document.getElementById(`subtotal${index}`);
+        const price = document.getElementById(`salePrice${index}`).value;
+
+        let quantity = parseInt(quantityElement.innerText);
+
+        if (action === "increase" && quantity < maxLimit && quantity < 10) {
+          quantity++;
+        } else if (action === "decrease" && quantity > 1) {
+          quantity--;
+        }
+
+        await fetch(`/updateQuantity/${quantity}/${index}/`, {
+          method: "POST",
+        });
+
+        // Update quantity in the DOM
+        quantityElement.innerText = quantity;
+
+        // Update subtotal in the DOM
+        subtotalElement.innerText = (price * quantity).toFixed(2);
+
+        // Call a function to update the total (if needed)
+        updateTotal();
+      }
+
+      function updateTotal() {
+        const subtotals = document.querySelectorAll('[id^="subtotal"]');
+        let total = 0;
+        let originalTotal = 0;
+        let totalDiscount = 0;
+
+        subtotals.forEach((subtotal, index) => {
+          const quantity = parseInt(
+            document.getElementById(`quantity${index}`).innerText
+          );
+          const regularPrice = parseFloat(
+            document.getElementById(`regularPrice${index}`).value
+          );
+          const salePrice = parseFloat(
+            document.getElementById(`salePrice${index}`).value
+          );
+
+          const subtotalValue = parseFloat(subtotal.innerText);
+          total += subtotalValue;
+          originalTotal += regularPrice * quantity;
+          totalDiscount += (regularPrice - salePrice) * quantity;
+        });
+
+        const totalPercentageDiscount = (totalDiscount / originalTotal) * 100;
+
+        // Calculate GST (18% of total)
+        const taxAmount = total * 0.18;
+        // Calculate Taxable Amount
+        const taxableAmount = total - taxAmount;
+
+        const totalWithTax = total;
+
+        document.getElementById("totalAmount").innerText =
+          totalWithTax.toFixed(2);
+        document.getElementById("originalTotal").innerText =
+          originalTotal.toFixed(2);
+        document.getElementById("totalDiscount").innerText =
+          totalDiscount.toFixed(2);
+        document.getElementById("totalPercentageDiscount").innerText = isNaN(
+          totalPercentageDiscount
+        )
+          ? "0%"
+          : totalPercentageDiscount.toFixed(2) + "%";
+        document.getElementById("taxableAmount").innerText =
+          taxableAmount.toFixed(2);
+        document.getElementById("taxAmount").innerText = taxAmount.toFixed(2);
+      }
+
+      async function removeFromCart(productId) {
+        await fetch(`/deleteFromCart?id=${productId}`, {
+          method: "GET",
+        });
+        location.reload();
+      }
+
+      window.onload = function () {
+        updateTotal();
+      };
+    </script>
+    <div class="row justify-content-center mb-5">
+      <div class="col-auto">
+        <div class="cart-action text-center">
+          <a class="btn btn-dark" href="/shop"><i></i> Continue Shopping</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

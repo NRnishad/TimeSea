@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TimeSea</title>
+    <link rel="stylesheet" href="/path/to/your/css" />
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+        margin: 0;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      .container img {
+        width: 50px;
+        height: 50px;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      .container h1 {
+        font-size: 24px;
+        margin: 20px 0;
+        color: #333;
+      }
+      .container p {
+        color: #666;
+        margin-bottom: 30px;
+      }
+      .container .button-group {
+        display: flex;
+        justify-content: center;
+      }
+      .container .button-group a {
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 0 10px;
+        font-weight: bold;
+      }
+      .container .button-group .btn-primary {
+        background-color: #ff6f00;
+        color: white;
+      }
+      .container .button-group .btn-secondary {
+        background-color: #ccc;
+        color: #333;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img src="\assetsb\imgs\icons\checkmark-24.png" alt="Success" />
+      <h1>Thank you for your order!</h1>
+      <p>
+        Your payment was processed successfully. We appreciate your business.
+      </p>
+      <div class="button-group">
+        <a href="/userAccount" class="btn-secondary">View Order</a>
+        <a href="/shop" class="btn-primary">Continue Shopping</a>
+      </div>
+    </div>
+  </body>
+</html>

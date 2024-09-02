@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+.navbar {
+    background-color: white;
+}
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+}
+.search-container input {
+    width: 100%;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    background-color: black;
+    color: white;
+    border: none;
+}
+.search-container .bi-search {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: white;
+}
