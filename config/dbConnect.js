@@ -1,11 +1,27 @@
-const { default: mongoose } = require("mongoose");
+// const { default: mongoose } = require("mongoose");
+// const dotenv = require("dotenv").config();
+// const dbConnect = () => {
+//   try {
+//     const conn = mongoose.connect(process.env.MONGO_DB_URL);
+//     console.log("Database connected successfully");
+//   } catch (error) {
+//     console.log("failed to connect");
+//   }
+// };
 
-const dbConnect = () => {
+// module.exports = dbConnect;
+
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
+
+const dbConnect = async () => {
   try {
-    const conn = mongoose.connect("mongodb://localhost:27017/TimeSea");
+    await mongoose.connect(process.env.MONGO_DB_URL, {});
     console.log("Database connected successfully");
   } catch (error) {
-    console.log("failed to connect");
+    console.error("Database connection failed: ", error);
+    process.exit(1);
   }
 };
 
