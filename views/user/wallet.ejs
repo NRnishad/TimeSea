@@ -93,9 +93,17 @@
                   <%= new
                   Date(transaction.orderDate).toLocaleDateString('en-GB') %>
                 </td>
+                 <% if (transaction.type=='Credited' ) { %>
+                  
+                  <td class="text-success">₹ <%= transaction.amount.toFixed(2) %></td>
+                  <% }else{ %>
+                <td class="text-danger">₹ <%= transaction.amount.toFixed(2) %></td><% } %>
 
-                <td>₹ <%= transaction.amount.toFixed(2) %></td>
-                <td><%= transaction.type %></td>
+                
+                <% if (transaction.type=='Credited' ) { %>
+                  <td class="text-success">Credited</td>
+                  <% }else{ %>
+                <td class="text-danger">Debited</td> <% } %>
               </tr>
               <% }); %>
             </tbody>
