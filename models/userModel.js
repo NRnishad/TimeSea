@@ -49,13 +49,13 @@ const userSchema = mongoose.Schema({
   referralCode: {
     type: String,
   },
-  googleId: {
-    // Add this field to store the Google ID
-    type: String,
-    unique: true,
-    sparse: true, // Allow unique values but permit null (for users not using Google)
-    default: null,
-  },
+  // googleId: {
+  //   // Add this field to store the Google ID
+  //   type: String,
+  //   unique: true,
+  //   sparse: true, // Allow unique values but permit null (for users not using Google)
+  //   default: null,
+  // },
 });
 
 module.exports = mongoose.model("User", userSchema);

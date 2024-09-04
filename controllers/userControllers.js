@@ -127,38 +127,42 @@ module.exports = {
 
   verifyOtp: async (req, res) => {
     try {
+      if (!req.session.data || !req.session.otp || !req.session.otpTime) {
+        return res.render("otpverification", {
+          message: "Session expired. Please try again.",
+        });
+      }
+
       const otp = req.session.otp;
       const randomotp = req.body.otp;
       const timelimit = Date.now();
 
       if (timelimit - req.session.otpTime > 30000) {
-        res.render("otpverification", { message: "OTP timeout" });
+        return res.render("otpverification", { message: "OTP timeout" });
+      }
+
+      const { name, email, mobile, password } = req.session.data;
+
+      if (String(randomotp) === String(otp)) {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const user = new User({
+          name,
+          email,
+          mobile,
+          password: hashedPassword,
+          is_admin: 0,
+        });
+        await user.save();
+        return res.redirect("/login");
       } else {
-        const { name, email, mobile, password } = req.session.data;
-
-        if (randomotp == otp) {
-          const salt = await bcrypt.genSalt(10);
-          const hashedPassword = await bcrypt.hash(password, salt);
-          const user = new User({
-            name: name,
-            email: email,
-            mobile: mobile,
-            password: hashedPassword,
-            is_admin: 0,
-          });
-          await user.save();
-
-          res.redirect("/login");
-        } else {
-          res.render("otpverification", { message: "Invalid Otp" });
-        }
+        return res.render("otpverification", { message: "Invalid OTP" });
       }
     } catch (error) {
       console.log(error.message);
-      res.redirect("/500");
+      return res.redirect("/500");
     }
   },
-
   loginLoad: async (req, res) => {
     try {
       if (req.session.userName) {
