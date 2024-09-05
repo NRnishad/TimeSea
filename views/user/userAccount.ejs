@@ -104,7 +104,7 @@
                                 <tr>
                                     <th>Order</th>
                                     <th>Date</th>
-                                    <th>Status</th>
+                                    
                                     <th>Total</th>
                                     <th>Payment</th>
                                     <th>Actions</th>
@@ -115,9 +115,7 @@
                                     <tr>
                                         <td>ORD<%= order.orderId %></td>
                                         <td><%= new Date(order.orderDate).toLocaleDateString('en-GB') %></td>
-                                        <td class="<%= (order.orderstatus === 'Cancelled' || order.orderstatus === 'Returned') ? 'text-danger' : 'text-success' %>">
-                                            <%= order.orderstatus %>
-                                        </td>
+                                       
                                         <td><%= order.totalAmount %></td>
                                         <td><%= order.paymentMethod %></td>
                                         <td><a href="/orderDetails?id=<%= order._id %>" class="btn-small d-block btn btn-dark">View Order</a></td>
