@@ -210,19 +210,21 @@
         <% } %>
       </ul>
           <a href="/wishlist" class="text-light me-3"
-            ><i class="bi bi-heart nav-link-icon"></i
-            ><span class="nav-link-text"> Wishlist</span></a
+            ><span class="nav-link-text"> Wishlist</span>
+            <i class="bi bi-heart nav-link-icon"></i></a
           >
           <a href="/cart" class="text-light me-3 position-relative">
-            <i class="bi bi-cart nav-link-icon"></i>
+            
             <span class="nav-link-text"> Cart</span>
+            <i class="bi bi-cart nav-link-icon"></i>
             <% if (user && user.cart && user.cart.length > 0) { %>
             <span class="cart-badge"><%= user.cart.length %></span>
             <% } %>
           </a>
           <a href="/userAccount" class="text-light"
-            ><i class="bi bi-person nav-link-icon"></i
-            ><span class="nav-link-text"> Account</span></a
+            ><span class="nav-link-text"> Account</span>
+            <i class="bi bi-person nav-link-icon"></i
+            ></a
           >
         <div class="d-flex align-items-center position-relative "> 
         
