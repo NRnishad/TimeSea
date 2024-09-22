@@ -50,32 +50,44 @@
       </div>
 
       <!-- Product Display Section -->
-      <div class="watch-category">
-        <br />
-        <h2>Products</h2>
-        <div class="row">
-          <% products.forEach((product, index)=> { %>
+      <!-- Add this CSS for responsiveness -->
+<style>
+  @media (max-width: 768px) {
+    /* For mobile view, two products per row */
+    .watch-category .col-lg-3 {
+      width: 100%;
+    }
+  }
+</style>
 
-          <div class="col-lg-3 col-md-4 col-sm-12 p-4">
-            <a href="/productDetails?id=<%= product._id %>">
-              <div class="card p-2" style="width: 18rem; height: 25rem">
-                <img
-                  style="width: 17rem; height: 18rem"
-                  src="/<%= product.image[0] %>"
-                  class="card-img-top"
-                  alt="..."
-                />
-                <div class="card-body text-center">
-                  <h5 class="card-title"><%= product.title %></h5>
-                  <p class="card-text">Rs.<%= product.salePrice %></p>
-                  <!-- <a href="/productDetails?id=<%= product._id %>" class="btn btn-dark btn-lg btn-block">Shop</a> -->
-                </div>
-              </div></a
-            >
+<!-- Inside your product display section -->
+<div class="watch-category">
+  <br />
+  <h2>Products</h2>
+  <div class="row">
+    <% products.forEach((product, index)=> { %>
+
+    <div class="col-lg-3 col-md-4 col-sm-6 p-4">
+      <a href="/productDetails?id=<%= product._id %>">
+        <div class="card p-2" style="width: 100%; height: 25rem">
+          <img
+            style="width: 100%; height: 18rem"
+            src="/<%= product.image[0] %>"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body text-center">
+            <h5 class="card-title"><%= product.title %></h5>
+            <p class="card-text text-warning">Rs.<%= product.salePrice %></p>
           </div>
-          <% }); %>
         </div>
-      </div>
+      </a>
+    </div>
+
+    <% }); %>
+  </div>
+</div>
+
 
       <!-- Pagination Section -->
       <% if (products.length > 0 && (nextPage || current == pages)) { %>

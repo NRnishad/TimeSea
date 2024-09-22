@@ -138,65 +138,100 @@
         padding: 2px 6px;
         font-size: 12px;
       }
+      .navbar-toggler {
+    border-color: white; /* Changes the border color of the toggle button */
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    /* This changes the three horizontal lines (icon) to white */
+}
+
     </style>
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-expand-lg navbar-custom text-white">
-        <div class="container">
-          <a class="navbar-brand" href="/">TimeSea</a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarTogglerDemo03"
-            aria-controls="navbarTogglerDemo03"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+     <style>
+  @media (max-width: 768px) {
+    /* Replace icons with text in navbar for mobile view */
+    .navbar-toggler-icon {
+      display: none;
+    }
+    .nav-link-icon {
+      display: none;
+    }
+    .nav-link-text {
+      display: inline-block;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .navbar-nav {
+        display: flex;
+        flex-direction: row;
+        
+    }
+
+    .navbar-nav .nav-item {
+        margin: 0 10px; /* Adds some space between the links */
+    }
+}
+
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-custom text-white">
+  <div class="container">
+    <a class="navbar-brand" href="/">TimeSea</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarTogglerDemo03"
+      aria-controls="navbarTogglerDemo03"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+      Menu
+    </button>
+    <div class="collapse navbar-collapse " id="navbarTogglerDemo03">
+     
+      <div class="d-flex align-items-center">  <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <% if (user) { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/shop">Shop</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/wallet">Wallet</a>
+        </li>
+        <% } %>
+      </ul>
+          <a href="/wishlist" class="text-light me-3"
+            ><i class="bi bi-heart nav-link-icon"></i
+            ><span class="nav-link-text"> Wishlist</span></a
           >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item active">
-                <a class="nav-link" href="/">Home</a>
-              </li>
-              <% if (user) { %>
-              <li class="nav-item">
-                <a class="nav-link" href="/shop">Shop</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/wallet">Wallet</a>
-              </li>
-
-              <% } %>
-              <!-- <li class="nav-item active">
-                <a class="nav-link" href="#">About Us</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="#">Contact Us</a>
-              </li> -->
-            </ul>
-            <div class="d-flex align-items-center">
-              <div class="d-flex align-items-center position-relative">
-                <a href="/wishlist" class="text-light me-3"
-                  ><i class="bi bi-heart"></i
-                ></a>
-                <a href="/cart" class="text-light me-3 position-relative">
-                  <i class="bi bi-cart"></i>
-                  <% if (user && user.cart && user.cart.length > 0) { %>
-                  <span class="cart-badge"><%= user.cart.length %></span>
-                  <% } %>
-                </a>
-
-                <a href="/userAccount" class="text-light"
-                  ><i class="bi bi-person"></i
-                ></a>
-              </div>
-            </div>
-          </div>
+          <a href="/cart" class="text-light me-3 position-relative">
+            <i class="bi bi-cart nav-link-icon"></i>
+            <span class="nav-link-text"> Cart</span>
+            <% if (user && user.cart && user.cart.length > 0) { %>
+            <span class="cart-badge"><%= user.cart.length %></span>
+            <% } %>
+          </a>
+          <a href="/userAccount" class="text-light"
+            ><i class="bi bi-person nav-link-icon"></i
+            ><span class="nav-link-text"> Account</span></a
+          >
+        <div class="d-flex align-items-center position-relative "> 
+        
         </div>
-      </nav>
+      </div>
+    </div>
+  </div>
+</nav>
+
     </header>
   </body>
 </html>
