@@ -53,7 +53,7 @@ const userSchema = mongoose.Schema({
     // Add this field to store the Google ID
     default: null,
     type: String,
-    unique: true,
+    unique: false,
     sparse: true, // Allow unique values but permit null (for users not using Google)
   },
 });
