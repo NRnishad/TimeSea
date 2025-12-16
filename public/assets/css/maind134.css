@@ -32,16 +32,16 @@ TABLE CONTENT
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,300;1,400;1,700;1,900&amp;display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Spartan:wght@300;400;500;600;700&amp;display=swap");
 /*import vendors*/
-@import url(vendors/normalize.css);
-@import url(vendors/bootstrap.min.css);
-@import url(vendors/evara-font.css);
-@import url(vendors/uicons-regular-straight.css);
+/* @import url(vendors/normalize.css); */
+/* @import url(vendors/bootstrap.min.css); */
+/* @import url(vendors/evara-font.css); */
+/* @import url(vendors/uicons-regular-straight.css); */
 /*import plugins*/
-@import url(plugins/jquery-ui.css);
-@import url(plugins/magnific-popup.css);
-@import url(plugins/select2.min.css);
-@import url(plugins/slick.css);
-@import url(plugins/perfect-scrollbar.css);
+/* @import url(plugins/jquery-ui.css); */
+/* @import url(plugins/magnific-popup.css); */
+/* @import url(plugins/select2.min.css); */
+/* @import url(plugins/slick.css); */
+/* @import url(plugins/perfect-scrollbar.css); */
 /*RESET*/
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,

@@ -83,19 +83,22 @@ module.exports = {
 
   sendOtp: async (req, res) => {
     try {
+      if (!req.session.data) {
+        return res.redirect("/signup");
+      }
       const { email } = req.session.data;
       const randomotp = Math.floor(1000 + Math.random() * 9000);
       console.log(randomotp);
       const transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
-          user: "nrnizam106@gmail.com",
+          user: process.env.NODEMAILER_EMAIL,
           pass: process.env.NODEMAILER_PASS_KEY,
         },
       });
 
       const mailOptions = {
-        from: "nrnizam106@gmail.com",
+        from: process.env.NODEMAILER_EMAIL,
         to: email,
         subject: "Hello, Nodemailer!",
         text: `Your verification OTP is ${randomotp}`,
@@ -114,7 +117,7 @@ module.exports = {
       console.log(req.session.otp);
       setTimeout(() => {
         console.log("session ended");
-      }, 30000);
+      }, 300000);
 
       req.session.otpTime = Date.now();
 
@@ -137,7 +140,7 @@ module.exports = {
       const randomotp = req.body.otp;
       const timelimit = Date.now();
 
-      if (timelimit - req.session.otpTime > 30000) {
+      if (timelimit - req.session.otpTime > 300000) {
         return res.render("otpverification", { message: "OTP timeout" });
       }
 
@@ -287,13 +290,13 @@ module.exports = {
       const transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
-          user: "nrnizam106@gmail.com",
+          user: process.env.NODEMAILER_EMAIL,
           pass: process.env.NODEMAILER_PASS_KEY,
         },
       });
 
       const mailOptions = {
-        from: "nrnizam106@gmail.com",
+        from: process.env.NODEMAILER_EMAIL,
         to: req.session.forgotPasswordEmail,
         subject: "Hello, Nodemailer!",
         text: `Your reset password verification OTP is ${randomotp}`,

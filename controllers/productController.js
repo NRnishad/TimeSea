@@ -47,28 +47,30 @@ module.exports = {
         const cropWidth = parseInt(req.body[`cropWidth${index}`], 10);
         const cropHeight = parseInt(req.body[`cropHeight${index}`], 10);
 
+        let shouldCrop = true;
+
         if (
           isNaN(cropX) ||
           isNaN(cropY) ||
           isNaN(cropWidth) ||
           isNaN(cropHeight)
         ) {
-          console.error("Invalid crop coordinates:", {
-            cropX,
-            cropY,
-            cropWidth,
-            cropHeight,
-          });
-          throw new Error("Invalid crop coordinates");
+          console.warn("Invalid or missing crop coordinates. Skipping crop for image:", file.filename);
+          shouldCrop = false;
         }
 
-        await sharp(imagePath)
-          .extract({
+        let imgProcessor = sharp(imagePath);
+
+        if (shouldCrop) {
+          imgProcessor = imgProcessor.extract({
             left: cropX,
             top: cropY,
             width: cropWidth,
             height: cropHeight,
-          })
+          });
+        }
+
+        await imgProcessor
           .resize({ width: 250, height: 300 })
           .toFile(resizedImagePath);
 

@@ -51,8 +51,8 @@ userRoute.get(
     failureRedirect: "/login",
   }),
   async (req, res) => {
-    // Fetch the user from the database using the Google ID stored in the session
-    const user = await User.findOne({ googleId: req.user.googleId });
+    // req.user is already populated by passport.deserializeUser
+    const user = req.user;
 
     // Add email and userName to the session
     req.session.email = user.email;
@@ -212,8 +212,8 @@ userRoute.post(
   orderController.handlePaymentFailure
 );
 
-userRoute.get("/orderSuccess",  orderController.orderSuccess);
-userRoute.get("/orderFailure",  orderController.orderFailure);
+userRoute.get("/orderSuccess", orderController.orderSuccess);
+userRoute.get("/orderFailure", orderController.orderFailure);
 
 //----------------------------------------------Repayment------------------------------------------------>
 
@@ -223,5 +223,9 @@ userRoute.get("/walletRepayment", orderController.walletRePayment);
 userRoute.post("/onlineRepayment", orderController.onlineRePayment);
 userRoute.get("/onlineRepayment", orderController.rePaymentSuccess);
 userRoute.post("/placeReOrder", auth.isLogin, orderController.placeReorder);
+
+userRoute.get("/500", (req, res) => {
+  res.render("500");
+});
 
 module.exports = userRoute;

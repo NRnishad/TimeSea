@@ -9,10 +9,15 @@ const session = require("express-session");
 require("dotenv").config();
 
 const Razorpay = require("razorpay");
-var instance = new Razorpay({
-  key_id: process.env.YOUR_KEY_ID,
-  key_secret: process.env.YOUR_KEY_SECRET,
-});
+let instance;
+if (process.env.YOUR_KEY_ID && process.env.YOUR_KEY_SECRET) {
+  instance = new Razorpay({
+    key_id: process.env.YOUR_KEY_ID,
+    key_secret: process.env.YOUR_KEY_SECRET,
+  });
+} else {
+  console.warn("Razorpay credentials not found in .env. Payment features will be disabled.");
+}
 
 module.exports = {
   placeOrder: async (req, res) => {
@@ -684,16 +689,21 @@ module.exports = {
       totalAmount = parseFloat(totalAmount.toFixed(2));
 
       var options = {
-        amount: totalAmount * 100, // Amount in paisa
+        amount: Math.round(totalAmount * 100), // Amount in paisa (rounded to avoid floating point errors)
         currency: "INR",
         receipt: "order_rcptid_11",
       };
 
       if (flag == 0) {
+        if (!instance) {
+          return res.status(500).json({
+            error: "Razorpay is not configured on the server.",
+          });
+        }
         instance.orders.create(options, async function (err, razorOrder) {
           if (err) {
-            console.log(err.message);
-            res.status(500).json({ error: "Failed to create order" });
+            console.error("Razorpay Order Creation Failed:", err);
+            res.status(500).json({ error: "Failed to create order", details: err });
           } else {
             res.status(200).json({
               message: "Order placed successfully.",
@@ -1281,16 +1291,20 @@ module.exports = {
       totalAmount = parseFloat(totalAmount.toFixed(2));
 
       var options = {
-        amount: totalAmount * 100, // Amount in paisa
+        amount: Math.round(totalAmount * 100), // Amount in paisa (rounded)
         currency: "INR",
         receipt: "order_rcptid_11",
       };
 
       if (flag == 0) {
+        if (!instance) {
+          console.error("Razorpay instance not initialized");
+          return res.status(500).json({ error: "Payment configuration error" });
+        }
         instance.orders.create(options, async function (err, razorOrder) {
           if (err) {
-            console.log(err.message);
-            res.status(500).json({ error: "Failed to create order" });
+            console.error("Razorpay Repayment Creation Failed:", err);
+            res.status(500).json({ error: "Failed to create order", details: err });
           } else {
             res.status(200).json({
               message: "Order placed successfully.",
@@ -1419,7 +1433,8 @@ module.exports = {
   // Handle failed payment
   orderFailure: (req, res) => {
     try {
-      res.render("orderFailure");
+      const orderId = req.query.orderId || null;
+      res.render("orderFailure", { orderId: orderId });
     } catch (error) {
       console.error("Error rendering order failure page:", error);
       res.redirect("/500");
