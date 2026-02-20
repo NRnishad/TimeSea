@@ -398,7 +398,8 @@ module.exports = {
       if (req.query.newEmail) {
         email = req.query.newEmail;
       } else {
-        email = req.session.email;
+        // Support both normal session login and Google OAuth (Passport)
+        email = req.session.email || (req.user && req.user.email);
       }
       console.log("Email is: " + email);
 

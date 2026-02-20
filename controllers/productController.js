@@ -324,10 +324,14 @@ module.exports = {
 
   loadHome: async (req, res, next) => {
     try {
-      console.log("Session on home page:", req.session);
-      let user = req.session.userName;
-      let page = 1;
+      // Get full user object from DB so header can access user.cart, etc.
+      const email = req.session.email;
+      let user = null;
+      if (email) {
+        user = await User.findOne({ email }).populate("cart.productId");
+      }
 
+      let page = 1;
       if (req.query.page) {
         page = req.query.page;
       }

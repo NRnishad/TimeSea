@@ -13,8 +13,6 @@ const wishlistController = require("../controllers/wishlistController");
 const User = require("../models/userModel");
 require("../passport");
 
-userRoute.use(passport.initialize());
-userRoute.use(passport.session());
 
 userRoute.get("/", productController.loadHome);
 userRoute.get("/shop", productController.shop);
@@ -50,18 +48,12 @@ userRoute.get(
   passport.authenticate("google", {
     failureRedirect: "/login",
   }),
-  async (req, res) => {
-    // Fetch the user from the database using the Google ID stored in the session
-    const user = await User.findOne({ googleId: req.user.googleId });
+  (req, res) => {
+    // req.user is now the full Mongoose user document (from deserializeUser)
+    req.session.email = req.user.email;
+    req.session.userName = req.user.name;
 
-    // Add email and userName to the session
-    req.session.email = user.email;
-    req.session.userName = user.name;
-
-    // Log the session to verify
-    console.log("Session after Google login:", req.session);
-
-    // Redirect to the homepage or wherever you want to send the user
+    console.log("Google OAuth login successful:", req.user.email);
     res.redirect("/");
   }
 );
@@ -212,8 +204,8 @@ userRoute.post(
   orderController.handlePaymentFailure
 );
 
-userRoute.get("/orderSuccess",  orderController.orderSuccess);
-userRoute.get("/orderFailure",  orderController.orderFailure);
+userRoute.get("/orderSuccess", orderController.orderSuccess);
+userRoute.get("/orderFailure", orderController.orderFailure);
 
 //----------------------------------------------Repayment------------------------------------------------>
 

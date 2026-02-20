@@ -3,21 +3,20 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const User = require('./models/userModel')
 const express = require('express');
 const userRoute = express();
-const dotenv=require('dotenv').config()
+const dotenv = require('dotenv').config()
 
 
 
 
 passport.serializeUser((user, done) => {
-  
-  done(null, user.googleId);
+  done(null, user._id || user.id);
 });
 
-passport.deserializeUser(async (googleId, done) => {
+passport.deserializeUser(async (id, done) => {
   try {
-    const user = await User.findOne({ googleId: googleId });
+    const user = await User.findById(id);
     if (user) {
-      done(null, { id: user.id, email: user.email, userName: user.name });
+      done(null, user);
     } else {
       done(new Error('User not found'), null);
     }
@@ -36,8 +35,7 @@ passport.deserializeUser(async (googleId, done) => {
 passport.use(new GoogleStrategy({
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/google/callback",
-  
+  callbackURL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/auth/google/callback",
   passReqToCallback: true
 },
   async (request, accessToken, refreshToken, profile, done) => {
