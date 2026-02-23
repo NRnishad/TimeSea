@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= isEdit ? 'Edit Address' : 'Add New Address' %> — TimeSea
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="/style/styles.css" rel="stylesheet" />
+    <style>
+        body {
+            background: #f5f5f5;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .addr-wrapper {
+            min-height: calc(100vh - 64px);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 2.5rem 1rem 5rem;
+        }
+
+        .addr-card {
+            width: 100%;
+            max-width: 580px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 28px rgba(0, 0, 0, 0.08);
+            padding: 2rem 2rem 2.2rem;
+        }
+
+        .back-link {
+            font-size: 0.8rem;
+            color: #888;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 1.2rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #111;
+        }
+
+        .form-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0f0f0f;
+            margin-bottom: 0.2rem;
+        }
+
+        .form-sub {
+            font-size: 0.82rem;
+            color: #999;
+            margin-bottom: 1.8rem;
+        }
+
+        .field-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .field-row .fg {
+            flex: 1;
+        }
+
+        .fg {
+            margin-bottom: 1rem;
+        }
+
+        .fg label {
+            display: block;
+            font-size: 0.73rem;
+            font-weight: 600;
+            color: #555;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 0.38rem;
+        }
+
+        .fg label .req {
+            color: #e63946;
+        }
+
+        .fg input,
+        .fg select {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            color: #111;
+            background: #fafafa;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .fg input:focus,
+        .fg select:focus {
+            border-color: #111;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .fg input.err-field,
+        .fg select.err-field {
+            border-color: #e63946;
+        }
+
+        .err-msg {
+            font-size: 0.73rem;
+            color: #e63946;
+            margin-top: 0.28rem;
+            display: none;
+        }
+
+        .err-msg.show {
+            display: block;
+        }
+
+        .sec-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 1.4rem 0 1rem;
+        }
+
+        .sec-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #ebebeb;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.8rem;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            background: #0f0f0f;
+            color: #fff;
+            border: 2px solid #0f0f0f;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-save:hover {
+            background: #333;
+            border-color: #333;
+        }
+
+        .btn-cancel {
+            padding: 0.7rem 1.1rem;
+            background: transparent;
+            color: #666;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .btn-cancel:hover {
+            border-color: #999;
+            color: #111;
+        }
+
+        .select-arrow {
+            position: relative;
+        }
+
+        .select-arrow::after {
+            content: '\f282';
+            font-family: 'bootstrap-icons';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 480px) {
+            .addr-card {
+                padding: 1.4rem 1rem;
+            }
+
+            .field-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .btn-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('userHeader') %>
+
+        <div class="addr-wrapper">
+            <div class="addr-card">
+                <a href="/userAccount" class="back-link">
+                    <i class="bi bi-arrow-left"></i> Back to Account
+                </a>
+
+                <h1 class="form-title">
+                    <%= isEdit ? 'Edit Address' : 'Add New Address' %>
+                </h1>
+                <p class="form-sub">Fields marked <span style="color:#e63946">*</span> are required</p>
+
+                <form method="post"
+                    action="<%= isEdit ? '/editAddressForm?addressId=' + address._id + '&checkout=' + (checkout || '') : '/addressForm' %>"
+                    onsubmit="return validateAddr(event)" novalidate>
+                    <% if (!isEdit && locals.checkout) { %>
+                        <input type="hidden" value="<%= checkout %>" name="checkout" />
+                        <% } %>
+
+                            <!-- Name -->
+                            <div class="field-row">
+                                <div class="fg">
+                                    <label for="fname">First Name <span class="req">*</span></label>
+                                    <input type="text" id="fname" name="fname" placeholder="John"
+                                        value="<%= isEdit ? address.fname : '' %>" />
+                                    <div class="err-msg" id="fnameErr">First name is required</div>
+                                </div>
+                                <div class="fg">
+                                    <label for="lname">Last Name <span class="req">*</span></label>
+                                    <input type="text" id="lname" name="lname" placeholder="Doe"
+                                        value="<%= isEdit ? address.lname : '' %>" />
+                                    <div class="err-msg" id="lnameErr">Last name is required</div>
+                                </div>
+                            </div>
+
+                            <!-- Contact -->
+                            <div class="sec-label">Contact</div>
+                            <div class="field-row">
+                                <div class="fg">
+                                    <label for="phone">Phone <span class="req">*</span></label>
+                                    <input type="tel" id="phone" name="phone" placeholder="10-digit mobile"
+                                        maxlength="10" value="<%= isEdit ? address.phone : '' %>" />
+                                    <div class="err-msg" id="phoneErr">Enter a valid 10-digit number</div>
+                                </div>
+                                <div class="fg">
+                                    <label for="email">Email <span class="req">*</span></label>
+                                    <input type="email" id="email" name="email" placeholder="you@example.com"
+                                        value="<%= isEdit ? address.email : '' %>" />
+                                    <div class="err-msg" id="emailErr">Enter a valid email</div>
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="sec-label">Delivery Address</div>
+
+                            <div class="fg">
+                                <label for="houseName">Address Line <span class="req">*</span></label>
+                                <input type="text" id="houseName" name="houseName" placeholder="House no., Street, Area"
+                                    value="<%= isEdit ? address.housename : '' %>" />
+                                <div class="err-msg" id="houseNameErr">Address is required</div>
+                            </div>
+
+                            <div class="field-row">
+                                <div class="fg">
+                                    <label for="city">City / Town <span class="req">*</span></label>
+                                    <input type="text" id="city" name="city" placeholder="City"
+                                        value="<%= isEdit ? address.city : '' %>" />
+                                    <div class="err-msg" id="cityErr">City is required</div>
+                                </div>
+                                <div class="fg">
+                                    <label for="pincode">Pincode <span class="req">*</span></label>
+                                    <input type="text" id="pincode" name="pincode" placeholder="6-digit pincode"
+                                        maxlength="6" value="<%= isEdit ? address.pincode : '' %>" />
+                                    <div class="err-msg" id="pincodeErr">Enter valid 6-digit pincode</div>
+                                </div>
+                            </div>
+
+                            <div class="field-row">
+                                <div class="fg select-arrow">
+                                    <label for="state">State <span class="req">*</span></label>
+                                    <select id="state" name="state">
+                                        <option value="">Select State</option>
+                                        <option value="Andhra Pradesh" <%=isEdit && address.state==='Andhra Pradesh'
+                                            ? 'selected' :'' %>>Andhra Pradesh</option>
+                                        <option value="Arunachal Pradesh" <%=isEdit &&
+                                            address.state==='Arunachal Pradesh' ? 'selected' :'' %>>Arunachal Pradesh
+                                        </option>
+                                        <option value="Assam" <%=isEdit && address.state==='Assam' ? 'selected' :'' %>
+                                            >Assam</option>
+                                        <option value="Bihar" <%=isEdit && address.state==='Bihar' ? 'selected' :'' %>
+                                            >Bihar</option>
+                                        <option value="Chhattisgarh" <%=isEdit && address.state==='Chhattisgarh'
+                                            ? 'selected' :'' %>>Chhattisgarh</option>
+                                        <option value="Goa" <%=isEdit && address.state==='Goa' ? 'selected' :'' %>>Goa
+                                        </option>
+                                        <option value="Gujarat" <%=isEdit && address.state==='Gujarat' ? 'selected' :''
+                                            %>>Gujarat</option>
+                                        <option value="Haryana" <%=isEdit && address.state==='Haryana' ? 'selected' :''
+                                            %>>Haryana</option>
+                                        <option value="Himachal Pradesh" <%=isEdit && address.state==='Himachal Pradesh'
+                                            ? 'selected' :'' %>>Himachal Pradesh</option>
+                                        <option value="Jharkhand" <%=isEdit && address.state==='Jharkhand' ? 'selected'
+                                            :'' %>>Jharkhand</option>
+                                        <option value="Karnataka" <%=isEdit && address.state==='Karnataka' ? 'selected'
+                                            :'' %>>Karnataka</option>
+                                        <option value="Kerala" <%=isEdit && address.state==='Kerala' ? 'selected' :'' %>
+                                            >Kerala</option>
+                                        <option value="Madhya Pradesh" <%=isEdit && address.state==='Madhya Pradesh'
+                                            ? 'selected' :'' %>>Madhya Pradesh</option>
+                                        <option value="Maharashtra" <%=isEdit && address.state==='Maharashtra'
+                                            ? 'selected' :'' %>>Maharashtra</option>
+                                        <option value="Manipur" <%=isEdit && address.state==='Manipur' ? 'selected' :''
+                                            %>>Manipur</option>
+                                        <option value="Meghalaya" <%=isEdit && address.state==='Meghalaya' ? 'selected'
+                                            :'' %>>Meghalaya</option>
+                                        <option value="Mizoram" <%=isEdit && address.state==='Mizoram' ? 'selected' :''
+                                            %>>Mizoram</option>
+                                        <option value="Nagaland" <%=isEdit && address.state==='Nagaland' ? 'selected'
+                                            :'' %>>Nagaland</option>
+                                        <option value="Odisha" <%=isEdit && address.state==='Odisha' ? 'selected' :'' %>
+                                            >Odisha</option>
+                                        <option value="Punjab" <%=isEdit && address.state==='Punjab' ? 'selected' :'' %>
+                                            >Punjab</option>
+                                        <option value="Rajasthan" <%=isEdit && address.state==='Rajasthan' ? 'selected'
+                                            :'' %>>Rajasthan</option>
+                                        <option value="Sikkim" <%=isEdit && address.state==='Sikkim' ? 'selected' :'' %>
+                                            >Sikkim</option>
+                                        <option value="Tamil Nadu" <%=isEdit && address.state==='Tamil Nadu'
+                                            ? 'selected' :'' %>>Tamil Nadu</option>
+                                        <option value="Telangana" <%=isEdit && address.state==='Telangana' ? 'selected'
+                                            :'' %>>Telangana</option>
+                                        <option value="Tripura" <%=isEdit && address.state==='Tripura' ? 'selected' :''
+                                            %>>Tripura</option>
+                                        <option value="Uttar Pradesh" <%=isEdit && address.state==='Uttar Pradesh'
+                                            ? 'selected' :'' %>>Uttar Pradesh</option>
+                                        <option value="Uttarakhand" <%=isEdit && address.state==='Uttarakhand'
+                                            ? 'selected' :'' %>>Uttarakhand</option>
+                                        <option value="West Bengal" <%=isEdit && address.state==='West Bengal'
+                                            ? 'selected' :'' %>>West Bengal</option>
+                                        <option value="Delhi" <%=isEdit && address.state==='Delhi' ? 'selected' :'' %>
+                                            >Delhi</option>
+                                        <option value="Chandigarh" <%=isEdit && address.state==='Chandigarh'
+                                            ? 'selected' :'' %>>Chandigarh</option>
+                                        <option value="Jammu and Kashmir" <%=isEdit &&
+                                            address.state==='Jammu and Kashmir' ? 'selected' :'' %>>Jammu and Kashmir
+                                        </option>
+                                        <option value="Ladakh" <%=isEdit && address.state==='Ladakh' ? 'selected' :'' %>
+                                            >Ladakh</option>
+                                        <option value="Puducherry" <%=isEdit && address.state==='Puducherry'
+                                            ? 'selected' :'' %>>Puducherry</option>
+                                        <option value="Andaman and Nicobar Islands" <%=isEdit &&
+                                            address.state==='Andaman and Nicobar Islands' ? 'selected' :'' %>>Andaman
+                                            and Nicobar Islands</option>
+                                        <option value="Lakshadweep" <%=isEdit && address.state==='Lakshadweep'
+                                            ? 'selected' :'' %>>Lakshadweep</option>
+                                    </select>
+                                    <div class="err-msg" id="stateErr">Please select a state</div>
+                                </div>
+                                <div class="fg select-arrow">
+                                    <label for="country">Country</label>
+                                    <select id="country" name="country">
+                                        <option value="India" selected>India</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="btn-row">
+                                <button type="submit" class="btn-save">
+                                    <i class="bi bi-check2"></i>
+                                    <%= isEdit ? 'Save Changes' : 'Add Address' %>
+                                </button>
+                                <button type="button" class="btn-cancel" onclick="window.location.href='/userAccount'">
+                                    Cancel
+                                </button>
+                            </div>
+                </form>
+            </div>
+        </div>
+
+        <%- include('footer') %>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+                function validateAddr(e) {
+                    e.preventDefault();
+                    var valid = true;
+
+                    function chk(id, errId, bad) {
+                        var el = document.getElementById(id);
+                        var err = document.getElementById(errId);
+                        if (!err) return;
+                        if (bad) {
+                            el.classList.add('err-field');
+                            err.classList.add('show');
+                            valid = false;
+                        } else {
+                            el.classList.remove('err-field');
+                            err.classList.remove('show');
+                        }
+                    }
+
+                    var fname = document.getElementById('fname').value.trim();
+                    var lname = document.getElementById('lname').value.trim();
+                    var phone = document.getElementById('phone').value.trim();
+                    var email = document.getElementById('email').value.trim();
+                    var house = document.getElementById('houseName').value.trim();
+                    var city = document.getElementById('city').value.trim();
+                    var pincode = document.getElementById('pincode').value.trim();
+                    var state = document.getElementById('state').value;
+
+                    chk('fname', 'fnameErr', fname === '');
+                    chk('lname', 'lnameErr', lname === '');
+                    chk('phone', 'phoneErr', !/^\d{10}$/.test(phone));
+                    chk('email', 'emailErr', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+                    chk('houseName', 'houseNameErr', house === '');
+                    chk('city', 'cityErr', city === '');
+                    chk('pincode', 'pincodeErr', !/^\d{6}$/.test(pincode));
+                    chk('state', 'stateErr', state === '');
+
+                    if (valid) { e.target.submit(); }
+                    return false;
+                }
+
+                // Clear error on input
+                document.querySelectorAll('.fg input, .fg select').forEach(function (el) {
+                    el.addEventListener('input', function () {
+                        this.classList.remove('err-field');
+                        var errEl = document.getElementById(this.id + 'Err');
+                        if (errEl) errEl.classList.remove('show');
+                    });
+                });
+            </script>
+</body>
+
+</html>
